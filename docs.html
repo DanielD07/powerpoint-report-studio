@@ -1,0 +1,733 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Raport Studio — Documentation</title><link rel="icon" href="assets/favicon.ico" sizes="any"/><link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png"/><link rel="icon" type="image/png" sizes="24x24" href="assets/favicon-24.png"/><link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png"/><link rel="icon" type="image/png" sizes="48x48" href="assets/favicon-48.png"/><link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png"/><link rel="icon" type="image/png" sizes="128x128" href="assets/favicon-128.png"/><link rel="icon" type="image/png" sizes="256x256" href="assets/favicon-256.png"/><link rel="apple-touch-icon" href="assets/favicon-256.png"/><style>:root {
+        --bg: #0b0f18;
+        --bg-card: #11161f;
+        --bg-code: #171d29;
+        --border: #212837;
+        --border-strong: #2c3445;
+        --text-primary: #e8ebf3;
+        --text-secondary: #a1a9bd;
+        --text-muted: #727a93;
+        --accent: #5b9cfb;
+        --tip: #2dd4bf;
+        --warn: #e8a33d;
+        --error: #f2777a;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        font-size: 14px;
+        line-height: 1.6;
+        color: var(--text-primary);
+        background: var(--bg);
+        color-scheme: dark;
+      }
+
+      .header {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 24px;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+      }
+
+      .header img {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+      }
+
+      .header-title {
+        font-size: 16px;
+        font-weight: 600;
+      }
+
+      .header-sub {
+        color: var(--text-muted);
+        font-weight: 400;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 220px minmax(0, 1fr);
+        gap: 36px;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 28px 24px 80px;
+      }
+
+      .toc {
+        position: sticky;
+        top: 86px;
+        align-self: start;
+        max-height: calc(100vh - 110px);
+        overflow-y: auto;
+      }
+
+      .toc-label {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 8px;
+      }
+
+      .toc a {
+        display: block;
+        padding: 5px 10px;
+        border-radius: 6px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 13.5px;
+      }
+
+      .toc a.sub {
+        padding-left: 22px;
+        font-size: 12.5px;
+        color: var(--text-muted);
+      }
+
+      .toc a:hover {
+        background: var(--bg-card);
+        color: var(--text-primary);
+      }
+
+      /* Scroll-spy: the section currently on screen (see the script at the bottom). */
+      .toc a.active {
+        background: rgba(91, 156, 251, 0.12);
+        color: var(--text-primary);
+        box-shadow: inset 2px 0 0 var(--accent);
+        font-weight: 600;
+      }
+
+      /* The parent of an active sub-entry (e.g. "Node reference" while reading "Significance"). */
+      .toc a.active-parent {
+        color: var(--text-primary);
+      }
+
+      /* ---- Search ---- */
+
+      .search {
+        position: relative;
+        margin-bottom: 18px;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 8px 34px 8px 32px;
+        border: 1px solid var(--border-strong);
+        border-radius: 8px;
+        background: var(--bg-card)
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23a1a9bd' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E")
+          no-repeat 10px center;
+        color: var(--text-primary);
+        font-family: inherit;
+        font-size: 13px;
+      }
+
+      .search-input::placeholder {
+        color: var(--text-muted);
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 2px rgba(91, 156, 251, 0.25);
+      }
+
+      .search-key {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        padding: 0 5px;
+        border: 1px solid var(--border-strong);
+        border-radius: 4px;
+        font-size: 10.5px;
+        color: var(--text-muted);
+        pointer-events: none;
+      }
+
+      .search-input:focus + .search-key,
+      .search-input:not(:placeholder-shown) + .search-key {
+        display: none;
+      }
+
+      .search-results {
+        list-style: none;
+        margin-top: 6px;
+        padding: 4px;
+        max-height: 60vh;
+        overflow-y: auto;
+        border: 1px solid var(--border-strong);
+        border-radius: 8px;
+        background: var(--bg-card);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+      }
+
+      .search-results[hidden] {
+        display: none;
+      }
+
+      .search-results li + li {
+        margin-top: 0;
+      }
+
+      .search-result {
+        display: block;
+        padding: 7px 9px;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .search-result.active,
+      .search-result:hover {
+        background: rgba(91, 156, 251, 0.12);
+      }
+
+      .search-result-section {
+        display: block;
+        font-size: 10.5px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+
+      /* Two-line clamp of the matched snippet. */
+      .search-result-text {
+        font-size: 12.5px;
+        line-height: 1.4;
+        color: var(--text-secondary);
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+      }
+
+      .search-result mark {
+        background: rgba(91, 156, 251, 0.25);
+        color: var(--text-primary);
+        border-radius: 2px;
+      }
+
+      .search-empty {
+        padding: 10px;
+        font-size: 12.5px;
+        color: var(--text-muted);
+        text-align: center;
+      }
+
+      /* Brief highlight on whatever a search result jumped to. */
+      .search-hit {
+        animation: search-hit 1.6s ease-out;
+        border-radius: 6px;
+      }
+
+      @keyframes search-hit {
+        0%,
+        35% {
+          background: rgba(91, 156, 251, 0.22);
+          box-shadow: 0 0 0 4px rgba(91, 156, 251, 0.22);
+        }
+        100% {
+          background: transparent;
+          box-shadow: 0 0 0 4px transparent;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+      }
+
+      main {
+        min-width: 0;
+      }
+
+      .intro h1 {
+        font-size: 28px;
+        line-height: 1.25;
+      }
+
+      .intro p {
+        margin-top: 8px;
+        font-size: 15px;
+        color: var(--text-secondary);
+      }
+
+      section.doc {
+        margin-top: 44px;
+        scroll-margin-top: 80px;
+      }
+
+      section.doc > h2 {
+        font-size: 21px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      h3 {
+        margin-top: 26px;
+        font-size: 16px;
+        scroll-margin-top: 80px;
+      }
+
+      h4 {
+        margin-top: 18px;
+        font-size: 14px;
+        color: var(--text-primary);
+      }
+
+      p,
+      ul,
+      ol,
+      table,
+      .callout,
+      .flow {
+        margin-top: 10px;
+      }
+
+      p,
+      li {
+        color: var(--text-secondary);
+      }
+
+      strong,
+      li strong,
+      td strong {
+        color: var(--text-primary);
+        font-weight: 600;
+      }
+
+      ul,
+      ol {
+        padding-left: 22px;
+      }
+
+      li + li {
+        margin-top: 4px;
+      }
+
+      a {
+        color: var(--accent);
+      }
+
+      code {
+        font-family: 'Cascadia Code', Consolas, monospace;
+        font-size: 12.5px;
+        padding: 1px 5px;
+        border-radius: 4px;
+        background: var(--bg-code);
+        color: var(--text-primary);
+      }
+
+      kbd {
+        display: inline-block;
+        min-width: 22px;
+        padding: 1px 6px;
+        border: 1px solid var(--border-strong);
+        border-bottom-width: 2px;
+        border-radius: 5px;
+        background: var(--bg-code);
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        text-align: center;
+        color: var(--text-primary);
+      }
+
+      .ui {
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13.5px;
+      }
+
+      th,
+      td {
+        text-align: left;
+        vertical-align: top;
+        padding: 8px 10px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      th {
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        background: var(--bg-card);
+      }
+
+      td {
+        color: var(--text-secondary);
+      }
+
+      td:first-child {
+        white-space: nowrap;
+        color: var(--text-primary);
+        font-weight: 600;
+      }
+
+      .callout {
+        padding: 10px 14px;
+        border-radius: 8px;
+        border-left: 3px solid var(--accent);
+        background: rgba(91, 156, 251, 0.08);
+        color: var(--text-secondary);
+      }
+
+      .callout.tip {
+        border-left-color: var(--tip);
+        background: rgba(45, 212, 191, 0.08);
+      }
+
+      .callout.warn {
+        border-left-color: var(--warn);
+        background: rgba(232, 163, 61, 0.08);
+      }
+
+      .callout-title {
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .flow {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+        padding: 12px 14px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: var(--bg-card);
+        font-size: 13px;
+      }
+
+      .flow span.node {
+        padding: 3px 9px;
+        border-radius: 6px;
+        border: 1px solid var(--border-strong);
+        background: var(--bg-code);
+        color: var(--text-primary);
+        font-weight: 600;
+      }
+
+      .flow span.arrow {
+        color: var(--text-muted);
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .card {
+        padding: 14px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: var(--bg-card);
+      }
+
+      .card h4 {
+        margin-top: 0;
+      }
+
+      .card p {
+        margin-top: 4px;
+        font-size: 13px;
+      }
+
+      .cat {
+        display: inline-block;
+        width: 9px;
+        height: 9px;
+        margin-right: 7px;
+        border-radius: 3px;
+        vertical-align: 1px;
+      }
+
+      @media (max-width: 760px) {
+        .layout {
+          grid-template-columns: minmax(0, 1fr);
+          gap: 16px;
+        }
+
+        .toc {
+          position: static;
+          max-height: none;
+        }
+
+        td:first-child {
+          white-space: normal;
+        }
+      }</style></head><body><header class="header"><img src="assets/icon-80.png" alt=""/><div class="header-title">Raport Studio <span class="header-sub">· Documentation</span></div></header><div class="layout"><nav class="toc" aria-label="Contents"><div class="search" role="search"><input id="docSearch" class="search-input" type="search" placeholder="Search docs…" autocomplete="off" aria-label="Search the documentation" aria-controls="docSearchResults"/> <span class="search-key" aria-hidden="true">Ctrl K</span><ul id="docSearchResults" class="search-results" role="listbox" hidden></ul></div><div class="toc-label">Contents</div><a href="#overview">Overview</a> <a href="#quick-start">Quick start</a> <a href="#importing-data">Importing data</a> <a href="#data-processing-studio">Data Processing Studio</a> <a href="#studio">The Studio</a> <a href="#building">Building a slide</a> <a href="#canvas">Working on the canvas</a> <a href="#shortcuts" class="sub">Keyboard shortcuts</a> <a href="#nodes">Node reference</a> <a href="#nodes-select" class="sub">Select</a> <a href="#nodes-tables" class="sub">Tables</a> <a href="#nodes-labels" class="sub">Labels &amp; Text</a> <a href="#nodes-math" class="sub">Math, Values, Arrange</a> <a href="#nodes-significance" class="sub">Significance</a> <a href="#nodes-logic" class="sub">Logic &amp; Chart</a> <a href="#nodes-io" class="sub">Inputs, outputs, organizing</a> <a href="#variables">Variables</a> <a href="#updating">Updating the report</a> <a href="#saving">Saving &amp; sharing</a> <a href="#troubleshooting">Troubleshooting</a></nav><main><div class="intro"><h1>Raport Studio documentation</h1><p>Raport Studio connects survey and Excel report data to the charts, tables and text boxes in a PowerPoint presentation. You wire up each slide once; after that, a new wave of data updates the whole deck in one click.</p></div><section class="doc" id="overview"><h2>Overview</h2><p>The add-in has three parts, all opened from the <span class="ui">Raport Studio</span> task pane (ribbon → <span class="ui">Daniel's Add-ins</span> → <span class="ui">Raport Studio</span>):</p><div class="cards"><div class="card"><h4>Task pane</h4><p>The launcher. Opens the two studios, shows which data files are connected to this presentation and the current status. Keep it open while you work — the studios talk to PowerPoint through it.</p></div><div class="card"><h4>Data Processing Studio</h4><p>Turns raw respondent data (<code>.sav</code> or a flat <code>.xlsx</code>) into crosstab tables — banners, filters, totals, averages and significance — and sends them to the Studio.</p></div><div class="card"><h4>Studio</h4><p>The main workspace. A node canvas per slide where you pick data, shape it, and connect it to the objects on the slide.</p></div></div><h3>How data flows</h3><div class="flow"><span class="node">Excel report / crosstabs</span><span class="arrow">→</span> <span class="node">Data Explorer</span><span class="arrow">→</span> <span class="node">Nodes on the slide's canvas</span><span class="arrow">→</span> <span class="node">Chart / table / text box on the slide</span></div><p>Everything — the canvases, the bindings and a copy of the imported data — is saved <strong>inside the presentation file itself</strong>. Reopening the deck later (or on another computer) restores all of it; you only need the Excel file again when you want newer numbers.</p></section><section class="doc" id="quick-start"><h2>Quick start</h2><ol><li><strong>Open the Studio.</strong> In the task pane, click <span class="ui">Open Studio</span>. It opens in its own window.</li><li><strong>Import your data.</strong> Click <span class="ui">1 Import Workbook</span> in the toolbar and pick the Excel report (<code>.xlsx</code>). Its tables appear in the <span class="ui">Data Explorer</span> on the left. (Working from raw respondent data instead? Build the tables in <a href="#data-processing-studio">Data Processing Studio</a> first.)</li><li><strong>Scan the slides.</strong> Click <span class="ui">2 Scan Slides</span>. Every slide and its objects appear in the <span class="ui">Slides</span> panel on the right.</li><li><strong>Pick a slide</strong> in the Slides panel. The canvas in the middle now belongs to that slide.</li><li><strong>Drag a question</strong> from the Data Explorer onto the canvas, then <strong>drag the target object</strong> (e.g. a chart) from the Slides panel onto the canvas.</li><li><strong>Wire them together</strong>, adding nodes in between to pick the rows/columns you need (right-click the canvas to add nodes). See <a href="#building">Building a slide</a>.</li><li><strong>Click <span class="ui">Update Slide</span></strong> above the canvas. The slide updates in PowerPoint.</li><li>Repeat for other slides. Next wave: import (or replace) the new file and click <span class="ui">4 Update Report</span> to update every slide at once.</li></ol></section><section class="doc" id="importing-data"><h2>Importing data</h2><h3>Supported Excel reports</h3><p>The Studio reads tabulation reports and finds every table in them automatically. Two layouts are recognized:</p><ul><li><strong>"Column % / Column Comparisons" reports</strong> with a <code>Tables</code> worksheet (the usual export format).</li><li><strong>QPSMR reports</strong> — detected from the structural codes in column A. Used automatically when the first layout isn't found.</li></ul><p>Each detected table becomes a <strong>question</strong>: a title, its rows (answer categories, base rows, NET rows…) and its columns (banners and waves, e.g. <code>Region A: Sep '26</code>).</p><p>Crosstabs built in Data Processing Studio arrive in exactly the same shape, so everything below applies to them too.</p><h3>The Data Explorer</h3><ul><li>Questions are grouped by the <strong>file</strong> they came from. A <strong>blue</strong> database icon is an imported Excel report; <strong>teal</strong> means the file holds crosstabs from Data Processing Studio.</li><li><strong>Hover</strong> a question for half a second to preview its table.</li><li><strong>Search</strong> filters questions by title; the best matches are listed first.</li><li><strong>Drag</strong> a question onto the canvas to use it (see <a href="#building">Building a slide</a>).</li><li><span class="ui">+ Data File</span> imports another file alongside the current ones — you can work with several files at once.</li><li><span class="ui">⟳</span> on a file <strong>replaces it with a newer version</strong> (any file name). Questions that still exist in the new file stay connected to your canvases; you're told which ones no longer exist.</li><li><span class="ui">×</span> removes a single question or a whole file.</li></ul><div class="callout tip"><span class="callout-title">New wave?</span> Use <span class="ui">⟳</span> on the existing file rather than removing and re-importing it — replacing keeps every wire on every slide connected.</div></section><section class="doc" id="data-processing-studio"><h2>Data Processing Studio</h2><p>Use it when you have <strong>raw respondent data</strong> rather than a finished tabulation report. Open it from the task pane with <span class="ui">Open Data Processing Studio</span>.</p><h3>Datasets</h3><ul><li><span class="ui">Import Respondent Data (.sav)</span> loads an SPSS file; a flat <code>.xlsx</code> (one row per respondent) works too.</li><li>Each import becomes a <strong>dataset</strong> in the left sidebar, with its respondent and question counts.</li><li><span class="ui">⟳</span> on a dataset <strong>updates its data from a newer file</strong> and keeps every crosstab and folder.</li><li>Crosstab definitions are saved in the presentation, but the raw respondent rows are not. After reopening the deck, a dataset shows as needing its data: re-import the same file, or use <span class="ui">⟳</span> to load a newer one.</li></ul><h3>Building a crosstab</h3><p>Click <span class="ui">+ New Crosstab</span> (or the <span class="ui">+</span> on a folder), give it a <span class="ui">Title</span>, then choose what goes on each axis.</p><table><thead><tr><th>Setting</th><th>What it does</th></tr></thead><tbody><tr><td>Rows from / Columns from</td><td><strong>One question's answer values</strong> (e.g. a satisfaction question's answers), <strong>a banner of different variables</strong> (several breakdowns side by side, e.g. Age, Region, Gender — each with its own label and order), or <strong>another crosstab's rows/columns</strong> (reuse an existing table's layout).</td></tr><tr><td>Combining categories</td><td>Type the <strong>same label on two rows</strong> of the column list to merge them into one column (e.g. two regions into "South").</td></tr><tr><td>Total column</td><td><span class="ui">Include a "Total" column</span> — every respondent, regardless of the column category.</td></tr><tr><td>Average row</td><td><span class="ui">Include an Average row</span>, computed either from <strong>a different, numeric question</strong> (e.g. exact years owned) or from <strong>values you assign to the row categories</strong> (e.g. "1-3 years" → 2; rows left blank are excluded).</td></tr><tr><td>Filters</td><td>Restrict the respondents. All conditions must match (AND); ticking several values inside one condition means "any of". Multi-answer questions offer <em>is any of / none of / all of</em>.</td></tr><tr><td>Significance</td><td><span class="ui">Significance testing (arrows, column vs. column)</span> at 90 / 95 / 99%. With several banners, choose between testing <strong>within each banner only</strong> (e.g. within Age, within Region) or <strong>between banners</strong> (same-named columns compared across banners).</td></tr><tr><td>Decimals</td><td>The <span class="ui">.0←</span> / <span class="ui">→.00</span> buttons decrease / increase decimal places.</td></tr><tr><td>Swap axes</td><td>Swaps rows and columns and recomputes the table.</td></tr><tr><td>Reordering</td><td>Drag a column header or row label in the preview to reorder it.</td></tr></tbody></table><p>Each crosstab computes column percentages, plus a NET row and a <strong>Column Sample Size</strong> row (the base), which the Studio's Sig Dif nodes can use.</p><h3>Sending crosstabs to the Studio</h3><p>Click <span class="ui">Add to Workbook</span>. The crosstab appears in the Studio's Data Explorer under the dataset's file name, with a teal icon. After you change it (a label, a filter, an order…), the button reads <span class="ui">Update in Workbook</span> — click it again to push the change. Slides already wired to that crosstab keep their connections.</p><h3>Organizing and exporting</h3><ul><li><strong>Folders</strong>: <span class="ui">+ New Folder</span> (and subfolders from a folder's own buttons); drag crosstabs into them and drag to reorder. Double-click a name to rename it. Deleting a folder moves its contents up a level.</li><li><strong>Duplicate</strong> a crosstab to start a variation from it.</li><li><strong>Export to Excel</strong>: tick crosstabs (or whole folders) and download them as one <code>.xlsx</code>. Folders become section headings. With nothing ticked, everything is exported. A single crosstab can also be downloaded from its own toolbar.</li></ul></section><section class="doc" id="studio"><h2>The Studio</h2><table><thead><tr><th>Area</th><th>What it's for</th></tr></thead><tbody><tr><td>Toolbar</td><td>The workflow steps — <span class="ui">1 Import Workbook</span>, <span class="ui">2 Scan Slides</span>, <span class="ui">3 Refresh</span>, <span class="ui">4 Update Report</span> — and the project buttons <span class="ui">Save Project Now</span>, <span class="ui">Save Project</span>, <span class="ui">Load Project</span> (see <a href="#saving">Saving &amp; sharing</a>).</td></tr><tr><td>Data Explorer</td><td>Every imported question, grouped by file. Drag from here onto the canvas.</td></tr><tr><td>Variables</td><td>Named values such as the current wave, shown in red. See <a href="#variables">Variables</a>.</td></tr><tr><td>Canvas</td><td>The selected slide's node graph. Its header has <span class="ui">Update Slide</span>. When you're inside a group, a breadcrumb shows where you are.</td></tr><tr><td>Slides</td><td>Every slide with a thumbnail and object count. Expand a slide to see its objects (charts, tables, text boxes, images) with their type. Drag an object onto the canvas to bind it; right-click an object to <span class="ui">Rename</span> it in PowerPoint.</td></tr><tr><td>Properties</td><td>Settings for the selected node (title, colors of comments and groups) or the selected variable.</td></tr><tr><td>Log / Errors / Warnings</td><td>Everything the Studio did, and the result of <span class="ui">Run Validation</span>. See <a href="#troubleshooting">Troubleshooting</a>.</td></tr><tr><td>Status bar</td><td>The current status, the connected workbook, and when the slides were last scanned.</td></tr></tbody></table><p>Panels can be resized by dragging the borders between them, and collapsed with their arrow.</p></section><section class="doc" id="building"><h2>Building a slide</h2><p>Each slide has its own canvas. A canvas is a small pipeline: data comes in on the left, gets shaped by nodes, and goes out on the right into an object on the slide.</p><h3>Example: a chart showing three columns of one question</h3><div class="flow"><span class="node">Q1. Satisfaction</span><span class="arrow">→</span> <span class="node">Get Rows</span><span class="arrow">+</span> <span class="node">Get Columns</span><span class="arrow">→</span> <span class="node">Display as Table</span><span class="arrow">→</span> <span class="node">Chart 3 (PowerPoint)</span></div><ol><li>Select the slide in the Slides panel.</li><li>Drag <strong>Q1</strong> from the Data Explorer onto the canvas. This creates a <strong>question node</strong> showing its row and column count.</li><li>Right-click the canvas → <span class="ui">Select</span> → <span class="ui">Get Rows</span>. Wire the question's <span class="ui">Output</span> into its <span class="ui">Input</span>, then pick the rows you want with <span class="ui">+ Add row</span>.</li><li>Do the same with <span class="ui">Get Columns</span> for the columns (e.g. Total and two regions).</li><li>Add <span class="ui">Tables</span> → <span class="ui">Display as Table</span>. Wire Get Rows into its <span class="ui">Rows</span> input and Get Columns into <span class="ui">Columns</span>. It shows a live preview of the resulting table — check the numbers here.</li><li>Expand the slide in the Slides panel and drag the chart onto the canvas. This creates its <strong>PowerPoint output node</strong>.</li><li>Wire Display as Table's <span class="ui">Output</span> into the chart node, then click <span class="ui">Update Slide</span>.</li></ol><div class="callout tip"><span class="callout-title">Faster wiring:</span> drag a wire from any output and release it on empty canvas — the add-node menu opens and the node you pick is connected automatically.</div><p>Text works the same way: build a value (e.g. with <span class="ui">Get Rows</span> + <span class="ui">Get Columns</span> down to a single cell), then feed it into a <span class="ui">Text Template</span> such as <code>Satisfaction reached {{score}} this wave</code>, and wire that into a text box.</p></section><section class="doc" id="canvas"><h2>Working on the canvas</h2><table><thead><tr><th>Action</th><th>How</th></tr></thead><tbody><tr><td>Add a node</td><td>Right-click empty canvas. Browse the categories, or just type to search (↑ ↓ to choose, <kbd>Enter</kbd> to add). Searching also finds <strong>questions</strong> by title and adds them as question nodes.</td></tr><tr><td>Connect</td><td>Drag from an output dot (right side of a node) to an input dot (left side).</td></tr><tr><td>Connect to a new node</td><td>Drag a wire out and release it on empty canvas — the add-node menu opens and auto-connects what you pick. Releasing it on top of an existing wire splices the new node into that wire.</td></tr><tr><td>Move a wire</td><td>Grab a wire right at its end and drop it on another dot.</td></tr><tr><td>Move all wires at once</td><td>Hold <kbd>Ctrl</kbd> while you start dragging from a dot that has several wires — they all come with you. Drop them on another dot of the same kind (output → output, input → input). Release on empty canvas or press <kbd>Esc</kbd> to cancel.</td></tr><tr><td>Delete a wire</td><td>Right-click it.</td></tr><tr><td>Add a bend point</td><td>Double-click a wire to drop a <strong>reroute</strong> dot you can drag to tidy the layout.</td></tr><tr><td>See what a wire connects</td><td>Hover over it for about a second — both ends are highlighted.</td></tr><tr><td>Select</td><td>Click a node; drag a box on empty canvas to select several (nodes must be fully inside the box).</td></tr><tr><td>Pan / zoom</td><td>Drag with the middle or right mouse button to pan; scroll to zoom. The minimap (bottom right) can be dragged too.</td></tr><tr><td>Resize a node</td><td>Select it and drag its edges. Nodes also grow by themselves to fit their content.</td></tr><tr><td>Open a group</td><td>Double-click it. Use the breadcrumb above the canvas (starting at <span class="ui">Base</span>) to go back out.</td></tr><tr><td>Rename a node</td><td>Select it and edit <span class="ui">Title</span> in the Properties panel.</td></tr></tbody></table><h3 id="shortcuts">Keyboard shortcuts</h3><p>Shortcuts work while the canvas has focus (not while you're typing in a field).</p><table><thead><tr><th>Keys</th><th>Action</th></tr></thead><tbody><tr><td><kbd>Ctrl</kbd> + <kbd>Z</kbd></td><td>Undo (up to 25 steps per slide)</td></tr><tr><td><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd></td><td>Redo</td></tr><tr><td><kbd>Ctrl</kbd> + <kbd>C</kbd> / <kbd>X</kbd> / <kbd>V</kbd></td><td>Copy / cut / paste at the cursor. One copied node pastes as a fresh, empty node of the same kind; several copied nodes paste exactly as copied, settings and wires between them included. Works between Studio windows too.</td></tr><tr><td><kbd>Ctrl</kbd> + <kbd>D</kbd></td><td>Duplicate the selection exactly, settings included</td></tr><tr><td><kbd>Ctrl</kbd> + <kbd>A</kbd></td><td>Select every node on the current canvas</td></tr><tr><td><kbd>Ctrl</kbd> + <kbd>G</kbd></td><td>Collapse the selected nodes into a <strong>group</strong> (a reusable "function" with its own inputs and outputs)</td></tr><tr><td><kbd>Delete</kbd> / <kbd>Backspace</kbd></td><td>Delete the selected nodes</td></tr><tr><td><kbd>C</kbd></td><td>Add a <strong>comment box</strong> around the selection (or an empty one at the cursor)</td></tr><tr><td><kbd>Q</kbd></td><td>Straighten the wires between the selected nodes (aligns each node with the one feeding it)</td></tr><tr><td><kbd>F</kbd></td><td>Frame everything — zoom to fit all nodes</td></tr><tr><td><kbd>Ctrl</kbd> + drag a dot</td><td>Carry all of that dot's wires to another dot</td></tr><tr><td><kbd>Esc</kbd></td><td>Close the add-node menu / cancel a wire drag</td></tr></tbody></table></section><section class="doc" id="nodes"><h2>Node reference</h2><p>Nodes are grouped exactly like the add-node menu. Each node's color matches its category. Most nodes take a table in on <span class="ui">Input</span> and pass a table out on <span class="ui">Output</span>; every node shows a live preview or a short status so you can check each step.</p><h3 id="nodes-select"><span class="cat" style="background:#a77bfa"></span>Select — pick parts of a table</h3><table><thead><tr><th>Node</th><th>What it does</th></tr></thead><tbody><tr><td>Get Rows</td><td>Keeps only the rows you pick (<span class="ui">+ Add row</span>). Each picked row also has its own output dot, and extra <span class="ui">Value</span> / <span class="ui">Label</span> outputs sit at the bottom.</td></tr><tr><td>Get Columns</td><td>Keeps only the columns you pick. Any column slot can be <strong>wired</strong> instead of picked — e.g. from a Column from Variable node.</td></tr><tr><td>Exclude Rows</td><td>The opposite of Get Rows: keeps every row <em>except</em> the ones picked. Can also exclude the sig-diff letter rows.</td></tr><tr><td>Exclude Columns</td><td>The opposite of Get Columns.</td></tr><tr><td>Get Banner</td><td>Keeps whole banner/split groups (e.g. <code>Total</code>, <code>Region A</code>) with every wave under them.</td></tr><tr><td>Column from Variable</td><td>Picks the column matching a <a href="#variables">variable</a>'s current value (e.g. <code>Sep '26</code>) under <strong>every</strong> banner at once. Shown in red.</td></tr><tr><td>Get Label</td><td>Outputs a row's or column's <strong>label text</strong> instead of its numbers — useful inside text templates.</td></tr></tbody></table><h3 id="nodes-tables"><span class="cat" style="background:#22d3ee"></span>Tables — build, combine and preview</h3><table><thead><tr><th>Node</th><th>What it does</th></tr></thead><tbody><tr><td>Display as Table</td><td>Merges a <span class="ui">Rows</span> input and a <span class="ui">Columns</span> input (from the same question) into a table and shows it. The most common last step before a chart or table.</td></tr><tr><td>Preview Table</td><td>Shows a single input that's already a complete table.</td></tr><tr><td>Assemble Table</td><td>Like Display as Table, but with as many Row and Column inputs as you need (<span class="ui">+ Add row</span> / <span class="ui">+ Add column</span>), all from the same question.</td></tr><tr><td>Combine Tables</td><td>Joins tables from <strong>different questions</strong>. <span class="ui">Combine by</span>: <strong>Stacking rows (same columns)</strong> or <strong>Merging columns (same rows)</strong>.</td></tr><tr><td>Manual Table</td><td>A table you type in by hand — headers, row labels and values, no workbook needed. <span class="ui">Runs</span>: <strong>Always</strong>, or <strong>When triggered</strong> by a Branch node's If/Else output.</td></tr><tr><td>Table Template</td><td>Full per-cell control over an output table: every cell has its own text with <code>{{variables}}</code>, drawn from a shared pool of wired-in values.</td></tr></tbody></table><p>Table previews let you set a <strong>number format per column</strong> in the header: format (e.g. Percentage) and decimal places with <span class="ui">.0←</span> / <span class="ui">→.00</span>.</p><h3 id="nodes-labels"><span class="cat" style="background:#818cf8"></span>Labels &amp; Text</h3><table><thead><tr><th>Node</th><th>What it does</th></tr></thead><tbody><tr><td>Rename Labels</td><td>A list of one-off renames: wire in a single row or column, type its new label. Each rename's <span class="ui">renamed to</span> input can also be wired from a Compose Text node.</td></tr><tr><td>Rename by Pattern</td><td>Learns a renaming rule from 2+ examples and applies it to every matching label — e.g. <code>…Brand X 2020 (l)</code> → <code>'20</code> and <code>…Brand X 2021 (m)</code> → <code>'21</code> also renames 2022, 2023 and any future wave.</td></tr><tr><td>Label Template</td><td>Rebuilds every column header (or row label) from a template. <code>{{label}}</code> is the current label, <code>{{value}}</code> the matching cell of the table wired into <span class="ui">Values</span> — e.g. <code>'20 (509)</code> with the base in brackets.</td></tr><tr><td>Text Template</td><td>Writes text with live numbers: type text with <code>{{name}}</code> placeholders, wire one input per variable, then wire the output into a text box. Has a formatting toolbar (bold, italic, underline, strikethrough, font, size, color, indent/list level).</td></tr><tr><td>Compose Text</td><td>Builds a short text from wired values only (no Data input) — typically to feed a Rename Labels <span class="ui">renamed to</span> input.</td></tr></tbody></table><h3 id="nodes-math"><span class="cat" style="background:#f472b6"></span>Math, <span class="cat" style="background:#eab308;margin-left:4px"></span>Values &amp; Arrange</h3><table><thead><tr><th>Node</th><th>What it does</th></tr></thead><tbody><tr><td>Add / Subtract / Multiply / Divide</td><td>Combines two or more branches cell by cell. Any operand can be a typed-in number instead of a wire.</td></tr><tr><td>Sum / Average</td><td>Totals or averages the table <strong>Down each column</strong> (one row out) or <strong>Across each row</strong> (one column out). Average skips empty cells.</td></tr><tr><td>Scale</td><td>Multiplies every number by a factor.</td></tr><tr><td>Round</td><td>Rounds every number to N decimals.</td></tr><tr><td>To Percentage (%)</td><td>×100 and adds "%" — 0.7 → 70%.</td></tr><tr><td>From Percentage (%)</td><td>÷100 — 70% → 0.7.</td></tr><tr><td>Replace Empty Values</td><td>Fills blank cells with a fixed value (default 0).</td></tr><tr><td>Sort</td><td><span class="ui">Sort rows</span> or <span class="ui">Sort columns</span> — by label, by a column's (or row's) value, by date, or by another table's order — ascending or descending. The sort column can also be wired in.</td></tr><tr><td>Transpose</td><td>Swaps rows and columns.</td></tr><tr><td>Reverse Rows / Columns</td><td>Reverses the order.</td></tr><tr><td>Skip First Row / Column</td><td>Drops the first row or column.</td></tr></tbody></table><h3 id="nodes-significance"><span class="cat" style="background:#f59e0b"></span>Significance</h3><table><thead><tr><th>Node</th><th>What it does</th></tr></thead><tbody><tr><td>Sig Dif (Calculate)</td><td>Runs the significance test itself: a two-proportion z-test between columns at the chosen <span class="ui">Confidence</span> (90 / 95 / 99%, or two levels at once — capitals for the higher, small letters for the lower). Wire <span class="ui">Data</span> plus the <span class="ui">Base (n)</span> row (e.g. Column Sample Size).</td></tr><tr><td>Sig Dif (From Workbook)</td><td>Doesn't calculate anything — reads the significance letters already printed in the imported report's cells. Wire only <span class="ui">Data</span>.</td></tr><tr><td>Has Sig Dif</td><td>A yes/no condition: TRUE when any row in the chosen column carries a significance mark. Feeds a Branch node.</td></tr><tr><td>Keep Sig Dif Rows</td><td>Keeps only the rows where at least one cell was marked significant.</td></tr></tbody></table><h4>Sig Dif options</h4><ul><li><span class="ui">Mark</span> — how a significant cell is shown: <strong>Letters</strong> (the letters of the columns it beats), <strong>Arrows</strong>, <strong>Arrows + color</strong>, or <strong>Arrows + color + ppt</strong>.</li><li><span class="ui">Compare</span> — <strong>Each vs each other</strong>, <strong>Each vs first column</strong>, or <strong>Each vs previous column</strong> (e.g. this wave vs last wave).</li><li><span class="ui">Rows</span> / <span class="ui">Columns</span> — test <strong>All</strong>, or only <strong>Specific</strong> ones.</li><li><span class="ui">Compare across banners?</span> — normally columns are only compared within their own banner (Age vs Age). Turn this on to compare every column against every other.</li><li>Text options control how the mark looks in chart data labels: arrow glyphs for higher/lower, value size/bold, data label color, and a space before the mark.</li></ul><h3 id="nodes-logic"><span class="cat" style="background:#34d399"></span>Logic &amp; <span class="cat" style="background:#e879f9;margin-left:4px"></span>Chart</h3><table><thead><tr><th>Node</th><th>What it does</th></tr></thead><tbody><tr><td>Greater Than / Less Than / Equal</td><td>A yes/no condition comparing A with B (wired, or a typed number). Equal also compares text, e.g. a label.</td></tr><tr><td>Branch (If/Else)</td><td>A gate: wire <span class="ui">Data</span> and a condition. <span class="ui">If</span> passes the data through when the condition is true, <span class="ui">Else</span> when it's false. Condition dots are square and green.</td></tr><tr><td>Chart Colors</td><td>Gives each <strong>Category (row label)</strong> or <strong>Series (column label)</strong> its own fill color in the bound chart — e.g. always show Brand A in red. Place it between your data and the chart.</td></tr></tbody></table><h3 id="nodes-io">Inputs, outputs and organizing</h3><table><thead><tr><th>Node</th><th>What it does</th></tr></thead><tbody><tr><td>Question node</td><td>Created by dragging a question from the Data Explorer (or searching for it in the add-node menu). Outputs the whole table.</td></tr><tr><td>PowerPoint output node</td><td>Created by dragging an object from the Slides panel. Shows the object's type and whether it's <strong>claimed</strong> (found on the slide) or <strong>unclaimed</strong> (missing — see <a href="#troubleshooting">Repair</a>). If PowerPoint can't tell the type (e.g. an empty content placeholder), pick it yourself. For charts: <span class="ui">Start cell</span> — leave blank to update the chart's data where it already is; set it only to move the data. <span class="ui">Resize data range</span> — also stretches the chart's series over every written column/row, so new waves join the chart.</td></tr><tr><td>Comment</td><td>A colored frame with a title and note, for labelling parts of the canvas (<kbd>C</kbd>). Drag it by its title bar; color and note are in Properties.</td></tr><tr><td>Group</td><td>Several nodes collapsed into one box with named input/output pins (<kbd>Ctrl</kbd>+<kbd>G</kbd>). Double-click to open and edit the inside.</td></tr><tr><td>Reroute</td><td>A bend point on a wire (double-click a wire).</td></tr></tbody></table></section><section class="doc" id="variables"><h2>Variables</h2><p>A variable is a named value you define once and use on any number of slides — most often the <strong>current wave</strong>. Change the value once, and every node that uses it follows on the next update.</p><ol><li>In the <span class="ui">Variables</span> panel, click <span class="ui">+ Variable</span>.</li><li>Select it and, in Properties, set its <span class="ui">Name</span> (e.g. <code>Current Wave</code>) and <span class="ui">Value</span>. <span class="ui">File</span> and <span class="ui">Banner</span> only narrow the list of values offered; they don't affect matching.</li><li>Drag the variable onto a canvas. This creates a <span class="ui">Column from Variable</span> node; wire a question into it.</li></ol><p>The value is matched against the part of each column label after the banner name, so <code>Sep '26</code> matches <code>Sep '26</code>, <code>Region A: Sep '26</code>, <code>Region B: Sep '26</code> and so on — in every question and every file that names the wave the same way. The node lists what it matched.</p><div class="callout tip"><span class="callout-title">Next wave in one step:</span> import the new data, change <code>Current Wave</code> to the new wave, then <span class="ui">Update Report</span>.</div></section><section class="doc" id="updating"><h2>Updating the report</h2><table><thead><tr><th>Button</th><th>What it does</th></tr></thead><tbody><tr><td>Update Slide</td><td>Above the canvas. Writes everything wired on the <strong>current slide</strong> to PowerPoint.</td></tr><tr><td>4 Update Report</td><td>Rescans the deck, then updates <strong>every slide</strong>: text boxes, tables and templates first, then all charts.</td></tr><tr><td>3 Refresh</td><td>Runs validation, then re-applies every binding in the project. If no workbook is loaded, it asks you to import one first.</td></tr></tbody></table><ul><li><strong>Text boxes and tables</strong> update in about a second.</li><li><strong>Charts</strong> take longer: PowerPoint rebuilds the slide to rewrite the chart's data. A slide with several charts can take a few minutes; the status bar shows progress. The slide keeps its look and position, but gets a new internal identity, which the Studio tracks for you.</li><li>Outputs whose data and wiring haven't changed since the last update in this session are <strong>skipped</strong>, so repeated updates are fast.</li><li>After an update the Studio reloads itself to pick up the refreshed slides.</li></ul><div class="callout warn"><span class="callout-title">Let updates finish.</span> Don't close the Studio or PowerPoint while charts are updating. If it happens anyway, nothing is lost — see <a href="#troubleshooting">Recovery</a>.</div></section><section class="doc" id="saving"><h2>Saving &amp; sharing</h2><ul><li><strong>Automatic:</strong> every change is saved into the presentation a moment after you make it. Saving the <code>.pptx</code> as usual keeps it; the imported data is stored with it too.</li><li><span class="ui">Save Project Now</span> forces that save immediately.</li><li><span class="ui">Save Project</span> downloads the whole project (canvases, bindings and data) as a <code>.json</code> backup.</li><li><span class="ui">Load Project</span> loads such a <code>.json</code> back — handy for reusing a setup in a similar deck.</li></ul><p>To share the work, just share the presentation: whoever opens it with the add-in gets every canvas and binding.</p></section><section class="doc" id="troubleshooting"><h2>Troubleshooting</h2><h3>Validation</h3><p>Click <span class="ui">Run Validation</span> in the bottom panel. Problems appear under <span class="ui">Errors</span> and <span class="ui">Warnings</span>; click one to jump to the node involved. Warnings you've checked can be dismissed.</p><table><thead><tr><th>Code</th><th>Meaning and fix</th></tr></thead><tbody><tr><td><code>MISSING_QUESTION</code></td><td>A question the project expects isn't in the imported data — usually the new file renamed or dropped a table. Check the Data Explorer and re-wire the affected slide.</td></tr><tr><td><code>UNRESOLVED_COLUMN</code></td><td>A binding points at a question that isn't in the current workbook. Import the file it came from, or re-wire it.</td></tr><tr><td><code>TRANSFORM_ERROR</code></td><td>A node couldn't compute — e.g. an input isn't connected, a template variable has no value, or a picked row/column no longer exists. The message names the node.</td></tr><tr><td><code>DUPLICATE_BINDING</code></td><td>Two bindings write to the same object; only the first is used. Remove the extra one.</td></tr><tr><td><code>ORPHANED_TAG</code></td><td>A shape carries a binding that's no longer in the project (copied from another deck, or edited outside the Studio). Usually harmless; re-bind it if it should update.</td></tr></tbody></table><h3>Repair: a bound object was deleted</h3><p>If an object a binding writes to no longer exists, its output node shows <strong>unclaimed</strong> and validation lists it with a <span class="ui">Repair</span> button. Click it, choose the slide, and <span class="ui">Confirm</span> — the object is recreated there and bound again.</p><h3 id="recovery">Recovery: a canvas went missing after an update</h3><p>If the Studio was closed (or froze) while charts were updating, the update still finishes in PowerPoint, but the canvas can end up attached to the slide's old identity. A <span class="ui">Recovery</span> tab then appears in the bottom panel. Nothing is deleted: pick the slide the canvas belongs to and click <span class="ui">Reattach</span>.</p><h3>Common problems</h3><table><thead><tr><th>Problem</th><th>What to do</th></tr></thead><tbody><tr><td>The Studio window doesn't open</td><td>A popup blocker may have stopped it. Allow popups for the add-in and click <span class="ui">Open Studio</span> again.</td></tr><tr><td>The Studio stopped responding to PowerPoint</td><td>Keep the task pane open — the Studio works through it. Close the Studio, reopen it from the task pane.</td></tr><tr><td>"No tables detected"</td><td>The file isn't a recognized report layout (see <a href="#importing-data">Importing data</a>). For raw respondent data, use Data Processing Studio.</td></tr><tr><td>An output node's type is wrong</td><td>Empty content placeholders can't report a type. Pick the type in the output node.</td></tr><tr><td>A chart doesn't show new waves</td><td>Turn on <span class="ui">Resize data range</span> in the chart's output node.</td></tr><tr><td>Can't find a node</td><td>Right-click the canvas and type part of its name. Renamed nodes are also found by their old names.</td></tr><tr><td>Lost on the canvas</td><td>Press <kbd>F</kbd> to frame every node.</td></tr><tr><td>Ribbon or title still shows old names after an add-in update</td><td>Close PowerPoint, clear <code>%LOCALAPPDATA%\Microsoft\Office\16.0\Wef\</code>, and reopen.</td></tr></tbody></table></section></main></div><script>// Scroll-spy (highlight the contents entry for the section on screen) and full-text search.
+      // Plain inline script on purpose — this page loads no bundle (see the comment in <head>).
+      (function () {
+        var toc = document.querySelector('.toc');
+        var tocLinks = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+        var HEADER_OFFSET = 90; // sticky page header height + a little air
+
+        // ---------- Scroll-spy ----------
+
+        // Every element a contents link points at, in document order.
+        var targets = tocLinks
+          .map(function (link) {
+            return { link: link, el: document.getElementById(link.getAttribute('href').slice(1)) };
+          })
+          .filter(function (t) {
+            return t.el;
+          })
+          .sort(function (a, b) {
+            return a.el.compareDocumentPosition(b.el) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
+          });
+
+        // A sub-entry's parent is the nearest non-sub link above it in the contents list.
+        function parentLink(link) {
+          if (!link.classList.contains('sub')) return null;
+          var i = tocLinks.indexOf(link);
+          while (--i >= 0) if (!tocLinks[i].classList.contains('sub')) return tocLinks[i];
+          return null;
+        }
+
+        var current = null;
+        function updateActive() {
+          var active = targets[0];
+          var atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+          if (atBottom) {
+            active = targets[targets.length - 1];
+          } else {
+            for (var i = 0; i < targets.length; i++) {
+              if (targets[i].el.getBoundingClientRect().top - HEADER_OFFSET <= 1) active = targets[i];
+            }
+          }
+          if (!active || active.link === current) return;
+          current = active.link;
+          tocLinks.forEach(function (l) {
+            l.classList.remove('active', 'active-parent');
+            l.removeAttribute('aria-current');
+          });
+          current.classList.add('active');
+          current.setAttribute('aria-current', 'location');
+          var parent = parentLink(current);
+          if (parent) parent.classList.add('active-parent');
+
+          // Keep the active entry visible inside the (independently scrolling) contents list.
+          var tocRect = toc.getBoundingClientRect();
+          var linkRect = current.getBoundingClientRect();
+          if (linkRect.top < tocRect.top + 40 || linkRect.bottom > tocRect.bottom - 10) {
+            toc.scrollTop += linkRect.top - tocRect.top - tocRect.height / 3;
+          }
+        }
+
+        var ticking = false;
+        window.addEventListener(
+          'scroll',
+          function () {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(function () {
+              ticking = false;
+              updateActive();
+            });
+          },
+          { passive: true }
+        );
+        window.addEventListener('resize', updateActive);
+        updateActive();
+
+        // ---------- Search ----------
+
+        var input = document.getElementById('docSearch');
+        var resultsEl = document.getElementById('docSearchResults');
+        var MAX_RESULTS = 25;
+
+        // Index every readable block once: headings, paragraphs, list items, table rows, cards, callouts.
+        var index = [];
+        var sectionTitle = '';
+        var subTitle = '';
+        document.querySelectorAll('main h2, main h3, main h4, main p, main li, main tr, main .callout').forEach(function (el) {
+          if (el.closest('thead')) return;
+          if (el.tagName === 'P' && el.closest('li, .callout, .card')) return; // already indexed via its container
+          // Table rows: keep cells apart ("Ctrl + Z — Undo"), not run together ("Ctrl + ZUndo").
+          var raw =
+            el.tagName === 'TR'
+              ? Array.prototype.map.call(el.cells, function (c) { return c.textContent; }).join(' — ')
+              : el.textContent;
+          var text = raw.replace(/\s+/g, ' ').trim();
+          if (!text) return;
+          if (el.tagName === 'H2') {
+            sectionTitle = text;
+            subTitle = '';
+          } else if (el.tagName === 'H3') {
+            subTitle = text;
+          }
+          var where = el.tagName === 'H2' ? text : subTitle && el.tagName !== 'H3' ? sectionTitle + ' › ' + subTitle : sectionTitle;
+          var weight = /^H[234]$/.test(el.tagName) ? 0 : el.tagName === 'TR' ? 1 : 2;
+          index.push({ el: el, text: text, lower: text.toLowerCase(), where: where, weight: weight });
+        });
+
+        function escapeHtml(s) {
+          return s.replace(/[&<>"']/g, function (c) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+          });
+        }
+
+        // A ~140-char window around the first match, with every query word highlighted.
+        function snippet(text, words) {
+          var lower = text.toLowerCase();
+          var at = lower.indexOf(words[0]);
+          var start = Math.max(0, at - 50);
+          var piece = (start > 0 ? '…' : '') + text.slice(start, start + 140) + (start + 140 < text.length ? '…' : '');
+          var html = escapeHtml(piece);
+          words.forEach(function (w) {
+            var re = new RegExp('(' + escapeHtml(w).replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            html = html.replace(re, '<mark>$1</mark>');
+          });
+          return html;
+        }
+
+        var results = [];
+        var activeIndex = 0;
+
+        function render() {
+          resultsEl.innerHTML = '';
+          if (!input.value.trim()) {
+            resultsEl.hidden = true;
+            return;
+          }
+          resultsEl.hidden = false;
+          if (results.length === 0) {
+            resultsEl.innerHTML = '<li class="search-empty">No results</li>';
+            return;
+          }
+          var words = input.value.trim().toLowerCase().split(/\s+/);
+          results.forEach(function (r, i) {
+            var li = document.createElement('li');
+            li.className = 'search-result' + (i === activeIndex ? ' active' : '');
+            li.setAttribute('role', 'option');
+            li.setAttribute('aria-selected', i === activeIndex ? 'true' : 'false');
+            li.innerHTML =
+              '<span class="search-result-section">' + escapeHtml(r.where) + '</span>' +
+              '<span class="search-result-text">' + snippet(r.text, words) + '</span>';
+            li.addEventListener('mousedown', function (e) {
+              e.preventDefault(); // keep focus in the input until we jump
+              go(i);
+            });
+            li.addEventListener('mouseenter', function () {
+              setActive(i);
+            });
+            resultsEl.appendChild(li);
+          });
+        }
+
+        function setActive(i) {
+          activeIndex = i;
+          Array.prototype.forEach.call(resultsEl.children, function (li, j) {
+            li.classList.toggle('active', j === i);
+            li.setAttribute('aria-selected', j === i ? 'true' : 'false');
+            if (j === i) li.scrollIntoView({ block: 'nearest' });
+          });
+        }
+
+        function search() {
+          var words = input.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+          activeIndex = 0;
+          if (words.length === 0) {
+            results = [];
+            render();
+            return;
+          }
+          // Every word must appear; headings beat table rows beat body text, then earlier matches first.
+          results = index
+            .filter(function (entry) {
+              return words.every(function (w) {
+                return entry.lower.indexOf(w) !== -1;
+              });
+            })
+            .map(function (entry, order) {
+              var startsWith = entry.lower.indexOf(words[0]) === 0 ? 0 : 1;
+              return { entry: entry, score: entry.weight * 2 + startsWith, order: order };
+            })
+            .sort(function (a, b) {
+              return a.score - b.score || a.order - b.order;
+            })
+            .slice(0, MAX_RESULTS)
+            .map(function (r) {
+              return r.entry;
+            });
+          render();
+        }
+
+        function go(i) {
+          var r = results[i];
+          if (!r) return;
+          var target = r.el;
+          var top = target.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET;
+          window.scrollTo({ top: top, behavior: 'smooth' });
+          target.classList.remove('search-hit');
+          void target.offsetWidth; // restart the animation if it's the same element again
+          target.classList.add('search-hit');
+          resultsEl.hidden = true;
+          input.blur();
+        }
+
+        input.addEventListener('input', search);
+        input.addEventListener('focus', function () {
+          if (input.value.trim()) render();
+        });
+        input.addEventListener('blur', function () {
+          resultsEl.hidden = true;
+        });
+        input.addEventListener('keydown', function (e) {
+          if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (results.length === 0) return;
+            var step = e.key === 'ArrowDown' ? 1 : -1;
+            setActive((activeIndex + step + results.length) % results.length);
+          } else if (e.key === 'Enter') {
+            e.preventDefault();
+            go(activeIndex);
+          } else if (e.key === 'Escape') {
+            input.value = '';
+            search();
+            input.blur();
+          }
+        });
+
+        // Ctrl+K (or "/") from anywhere on the page focuses the search box.
+        document.addEventListener('keydown', function (e) {
+          var typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement && document.activeElement.tagName);
+          if ((e.key === 'k' && (e.ctrlKey || e.metaKey)) || (e.key === '/' && !typing)) {
+            e.preventDefault();
+            input.focus();
+            input.select();
+          }
+        });
+      })();</script></body></html>
